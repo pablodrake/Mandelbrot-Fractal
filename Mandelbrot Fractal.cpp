@@ -50,7 +50,6 @@ SDL_Color getColor(int iterations, int maxIterations) {
         auto ifactor = static_cast<size_t>(factor);
         if (ifactor >= maxColor) {
             // Handle the case where 'ifactor' is out of bounds.
-            // You can return a default color or take appropriate action.
             return { 0, 0, 0, 255 };
         }
 
@@ -132,7 +131,7 @@ int main()
         TTF_Font* font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
         if (!font)
         {
-            TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 24);
+            std::cout << "Couldn´t load a font\n";
         }
         SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -194,7 +193,7 @@ int main()
                 }
             }
         }
-        SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+        //SDL_RenderCopy(renderer, texture, nullptr, &destRect);
         SDL_RenderPresent(renderer);
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
