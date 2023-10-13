@@ -131,7 +131,7 @@ int main()
         TTF_Font* font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
         if (!font)
         {
-            std::cout << "Couldn´t load a font\n";
+            std::cout << "CouldnÂ´t load a font\n";
         }
         SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -193,6 +193,7 @@ int main()
                 }
             }
         }
+        //Uncomment this line to see debug information
         //SDL_RenderCopy(renderer, texture, nullptr, &destRect);
         SDL_RenderPresent(renderer);
         SDL_FreeSurface(surface);
