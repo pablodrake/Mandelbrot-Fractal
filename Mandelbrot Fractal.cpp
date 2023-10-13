@@ -2,7 +2,6 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #undef main
-#include <Windows.h>
 #include <iostream>
 #include <numeric>
 #include <omp.h>
@@ -57,7 +56,7 @@ SDL_Color getColor(int iterations, int maxIterations) {
 
         // Interpolate between two neighboring colors
         SDL_Color color1 = colors[ifactor];
-        SDL_Color color2 = colors[min(ifactor + 1, maxColor)];
+        SDL_Color color2 = colors[std::min(ifactor + 1, maxColor)];
 
         SDL_Color interpolatedColor = lerp(color1, color2, factor - ifactor);
 
@@ -133,7 +132,7 @@ int main()
         TTF_Font* font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", 24);
         if (!font)
         {
-            std::cout << "xd";
+            TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 24);
         }
         SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
