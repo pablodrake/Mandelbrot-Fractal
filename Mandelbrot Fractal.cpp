@@ -8,11 +8,17 @@
 #include <chrono>
 #include <complex>
 
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+using std::chrono::milliseconds;
+
 long double in_min = -1.0, in_max = 1;
 long double out_min = -2.5, out_max = 1;
 int MAX_ITERATIONS = 64;
 double zoom = 1.0;
 double zoomFactor = 2;
+int xMouse, yMouse;
 
 
 SDL_Color lerp(SDL_Color color1, SDL_Color color2, double t) {
@@ -111,20 +117,11 @@ int main()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init();
-
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
-
-
     SDL_DisplayMode dm;
-    SDL_GetCurrentDisplayMode(0, &dm); 
+    SDL_GetCurrentDisplayMode(0, &dm);
     SDL_Window* window = SDL_CreateWindow("FRACTAL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, dm.w, dm.h, 0);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_RenderSetLogicalSize(renderer, dm.w, dm.h);
     SDL_Event event;
-    int xMouse, yMouse;
     while (true) 
     {
         std::string text = "Iterations: " + std::to_string(MAX_ITERATIONS) + "     Zoom: " + std::to_string(zoom);
@@ -144,12 +141,26 @@ int main()
         destRect.w = surface->w; // Width of the text
         destRect.h = surface->h; // Height of the text
 
+
         SDL_RenderPresent(renderer);
 
         // Capture user input
         while (SDL_PollEvent(&event)) {
             if (event.key.keysym.sym == SDLK_ESCAPE) {
                 return 0;
+            }
+            if (event.key.keysym.sym == SDLK_s)
+            {
+                SDL_Surface* surface = SDL_CreateRGBSurface(0, dm.w, dm.h, 32, 0, 0, 0, 0);
+                if (!surface) {
+                    std::cout << "Failed to create surface: " << SDL_GetError() << std::endl;
+                    return 0;
+                }
+
+                SDL_RenderReadPixels(renderer, nullptr, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+                SDL_SaveBMP(surface, "mandelbrot.png");
+                std::cout << "Imaged saved as mandelbrot.png\n";
+                SDL_FreeSurface(surface);
             }
             if (event.type == SDL_MOUSEWHEEL)
             {
@@ -193,8 +204,8 @@ int main()
                 }
             }
         }
-        //Uncomment this line to see debug information
-        //SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+        //Comment this line to hide debug information
+        SDL_RenderCopy(renderer, texture, nullptr, &destRect);
         SDL_RenderPresent(renderer);
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
